@@ -2,6 +2,7 @@ package net.myrts.mechmeta;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,8 +79,22 @@ public enum ConfigManager {
     }
 
     private File getFile(Class beanType) {
+        Config config = (Config) beanType.getAnnotation(Config.class);
+        String filePath = beanType.getSimpleName();
+        if (StringUtils.isNotEmpty(config.name())) {
+            filePath = config.name();
+        }
+        if (config.useFullPath()) {
+            String className  = beanType.getName();
+            String[] strings = className.split("\\.");
+            StringBuffer sb = new StringBuffer(className.length());
+            for (int indx = 0; indx < strings.length - 1; indx++) {
+                sb.append(strings[indx].toLowerCase()).append(File.separator);
+            }
+            filePath = sb.toString() + filePath;
+        }
         final ClassLoader myLoader = getClass().getClassLoader();
-        final URL url = myLoader.getResource(prepareResourceFileName(beanType.getName()));
+        final URL url = myLoader.getResource(prepareResourceFileName(filePath));
         return url == null ? null : new File(url.getFile());
     }
 
@@ -91,13 +106,10 @@ public enum ConfigManager {
 
     private String toCamelCase(String className) {
         String[] strings = className.split("\\.");
-        StringBuffer sb = new StringBuffer(className.length());
-        for (int indx = 0; indx < strings.length - 1; indx++) {
-            sb.append(strings[indx].toLowerCase()).append(File.separator);
-        }
+        StringBuilder sb = new StringBuilder();
         final String simpleClassName = strings[strings.length - 1];
-        final char ferstLetter = simpleClassName.toLowerCase().charAt(0);
-        return sb.append(ferstLetter).append(simpleClassName.substring(1)).toString();
+        final char firstLetter = simpleClassName.toLowerCase().charAt(0);
+        return sb.append(firstLetter).append(simpleClassName.substring(1)).toString();
     }
 
 }

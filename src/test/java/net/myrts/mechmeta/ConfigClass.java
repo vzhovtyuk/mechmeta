@@ -7,7 +7,7 @@ package net.myrts.mechmeta;
  *         Date: 12/7/15
  *         Time: 5:44 PM
  */
-@Config
+@Config(useFullPath = true)
 public class ConfigClass {
     private String fieldA;
     private Integer fieldIntA;

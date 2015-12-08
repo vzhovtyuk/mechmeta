@@ -15,4 +15,14 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Config {
+    /**
+     * @return source name for configuration.
+     */
+    String name() default "";
+
+    /**
+     * @return use full package path to configuration source
+     */
+    boolean useFullPath() default false;
+
 }
