@@ -21,6 +21,7 @@ public class ConfigManagerTest {
 
         assertNotNull("Configured bean should be defined", confClass);
         assertEquals("FieldA should be configured ", "fieldAValue", confClass.getFieldA());
+        assertEquals("fieldIntA should be configured ", 123, confClass.getFieldIntA().intValue());
 
     }
 }
